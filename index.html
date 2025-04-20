@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Patient Monitoring Dashboard</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f7fa;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 50px;
+    }
+
+    .card {
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 30px;
+      width: 350px;
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    }
+
+    .card h2 {
+      color: #2b2b2b;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .info {
+      margin-bottom: 15px;
+      font-size: 18px;
+    }
+
+    .label {
+      font-weight: 600;
+      color: #555;
+    }
+
+    .value {
+      float: right;
+      font-weight: bold;
+      color: #1a73e8;
+    }
+
+    .status-denied {
+      color: #e53935;
+    }
+
+    .status-allowed {
+      color: #43a047;
+    }
+
+    .status-fallen {
+      color: #f57c00;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>Patient Data</h2>
+    <div class="info"><span class="label">Access:</span> <span id="access" class="value"></span></div>
+    <div class="info"><span class="label">BPM:</span> <span id="bpm" class="value"></span></div>
+    <div class="info"><span class="label">Object Detected:</span> <span id="object" class="value"></span></div>
+    <div class="info"><span class="label">Patient Status:</span> <span id="status" class="value"></span></div>
+  </div>
+
+  <!-- Firebase v8 SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <script>
+    // Replace with your own Firebase config
+    const firebaseConfig = {
+    apiKey: "AIzaSyDdJppwEryd5pQ_WBH_V9rWkTWPWRfybuQ",
+    authDomain: "iot1-71b2a.firebaseapp.com",
+    databaseURL: "https://iot1-71b2a-default-rtdb.firebaseio.com",
+    projectId: "iot1-71b2a",
+    storageBucket: "iot1-71b2a.firebasestorage.app",
+    messagingSenderId: "957771510436",
+    appId: "1:957771510436:web:79b569686dc7061ee36c31"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    var database = firebase.database();
+
+    // Listen for changes at "data" node
+    var dbRef = database.ref("data");
+    dbRef.on('value', function(snapshot) {
+      const data = snapshot.val();
+      document.getElementById("access").textContent = data["Access"];
+      document.getElementById("bpm").textContent = data["BPM"];
+      document.getElementById("object").textContent = data["Object Detected"] ? "Yes" : "No";
+      document.getElementById("status").textContent = data["Patient Status"];
+
+      // Optional: Add conditional styles
+      const accessEl = document.getElementById("access");
+      accessEl.classList.remove("status-denied", "status-allowed");
+      if (data["Access"] === "DENIED") accessEl.classList.add("status-denied");
+      else if (data["Access"] === "ALLOWED") accessEl.classList.add("status-allowed");
+
+      const statusEl = document.getElementById("status");
+      statusEl.classList.remove("status-fallen");
+      if (data["Patient Status"] === "Fallen") statusEl.classList.add("status-fallen");
+    });
+  </script>
+
+</body>
+</html>
