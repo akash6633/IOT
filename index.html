@@ -11,7 +11,7 @@
       margin: 0;
       padding: 0;
     }
-  
+
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: url('https://images.unsplash.com/photo-1606761568499-6a12a3b12b38?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
@@ -23,7 +23,7 @@
       padding: 20px;
       color: #fff;
     }
-  
+
     .container {
       background: rgba(0, 0, 0, 0.4);
       border: 1px solid rgba(255, 255, 255, 0.3);
@@ -37,7 +37,7 @@
       flex-direction: column;
       gap: 20px;
     }
-  
+
     h2 {
       text-align: center;
       font-size: 1.8rem;
@@ -45,22 +45,24 @@
       text-shadow: 0 0 10px rgba(0, 234, 255, 0.5);
       margin-bottom: 20px;
     }
-  
+
     .data-group {
       display: flex;
       align-items: center;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(255, 255, 255, 0.1);
       padding: 12px;
       border-radius: 10px;
       transition: background 0.3s ease;
-      box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
       margin-bottom: 15px;
     }
-  
+
     .data-group:hover {
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(255, 255, 255, 0.2);
     }
-  
+
     .icon {
       width: 40px;
       height: 40px;
@@ -69,69 +71,71 @@
       padding: 5px;
       flex-shrink: 0;
     }
-  
+
     .icon img {
       width: 100%;
       height: 100%;
       object-fit: contain;
       filter: drop-shadow(0 0 4px #00eaff);
     }
-  
+
     .info {
       flex: 1;
     }
-  
+
     .label {
       font-size: 1.1em;
-      color: #aad;
+      color: #eef;
     }
-  
+
     .value {
       font-size: 1.3em;
       font-weight: bold;
       margin-top: 5px;
-      color: #fff;
+      color: #ffffff;
     }
-  
-    /* Flexbox Layout for Rows */
+
     .top-row, .bottom-row {
       display: flex;
       justify-content: space-between;
       gap: 20px;
     }
-  
+
     .center-row {
       display: flex;
       justify-content: center;
       align-items: center;
     }
-  
-    /* Mobile and Small Screen Adjustments */
+
     @media (max-width: 480px) {
       .container {
         padding: 15px;
       }
-  
+
       h2 {
         font-size: 1.5rem;
       }
-  
+
       .label {
         font-size: 0.9em;
       }
-  
+
       .value {
         font-size: 1.1em;
       }
-  
+
       .icon {
         width: 32px;
         height: 32px;
         margin-right: 10px;
       }
+
+      .top-row, .bottom-row {
+        flex-direction: column;
+        gap: 15px;
+      }
     }
   </style>
-  
 </head>
 <body>
   <div class="container">
@@ -156,7 +160,7 @@
       </div>
     </div>
 
-    <!-- Centered Heart Rate (BPM) -->
+    <!-- Centered Heart Rate -->
     <div class="center-row">
       <div class="data-group">
         <div class="icon"><img src="https://cdn-icons-png.flaticon.com/512/833/833472.png" alt="Heart Rate Icon" /></div>
@@ -167,7 +171,7 @@
       </div>
     </div>
 
-    <!-- Bottom Row with Distance and Object -->
+    <!-- Bottom Row with Distance and Tilt -->
     <div class="bottom-row">
       <div class="data-group">
         <div class="icon"><img src="https://cdn-icons-png.flaticon.com/512/1034/1034106.png" alt="Distance Icon" /></div>
@@ -178,9 +182,9 @@
       </div>
 
       <div class="data-group">
-        <div class="icon"><img src="https://cdn-icons-png.flaticon.com/512/992/992700.png" alt="Object Icon" /></div>
+        <div class="icon"><img src="https://cdn-icons-png.flaticon.com/512/992/992700.png" alt="Tilt Icon" /></div>
         <div class="info">
-          <div class="label">Object</div>
+          <div class="label">Tilt</div>
           <div class="value" id="tilt">Loading...</div>
         </div>
       </div>
