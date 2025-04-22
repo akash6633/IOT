@@ -1,117 +1,226 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Patient Monitoring Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Firebase Realtime Monitor</title>
+
   <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+  
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f5f7fa;
+      background: url('https://images.unsplash.com/photo-1606761568499-6a12a3b12b38?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
+      background-size: cover;
       display: flex;
       justify-content: center;
-      align-items: flex-start;
-      padding: 50px;
+      align-items: center;
+      height: 100vh;
+      padding: 20px;
+      color: #fff;
     }
-
-    .card {
-      background-color: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      padding: 30px;
-      width: 350px;
-      transition: 0.3s;
+  
+    .container {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 20px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
-
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-    }
-
-    .card h2 {
-      color: #2b2b2b;
-      margin-bottom: 20px;
+  
+    h2 {
       text-align: center;
+      font-size: 1.8rem;
+      color: #00eaff;
+      text-shadow: 0 0 10px rgba(0, 234, 255, 0.5);
+      margin-bottom: 20px;
     }
-
-    .info {
+  
+    .data-group {
+      display: flex;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 12px;
+      border-radius: 10px;
+      transition: background 0.3s ease;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
       margin-bottom: 15px;
-      font-size: 18px;
     }
-
+  
+    .data-group:hover {
+      background: rgba(0, 0, 0, 0.8);
+    }
+  
+    .icon {
+      width: 40px;
+      height: 40px;
+      margin-right: 15px;
+      border-radius: 50%;
+      padding: 5px;
+      flex-shrink: 0;
+    }
+  
+    .icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 0 4px #00eaff);
+    }
+  
+    .info {
+      flex: 1;
+    }
+  
     .label {
-      font-weight: 600;
-      color: #555;
+      font-size: 1.1em;
+      color: #aad;
     }
-
+  
     .value {
-      float: right;
+      font-size: 1.3em;
       font-weight: bold;
-      color: #1a73e8;
+      margin-top: 5px;
+      color: #fff;
     }
-
-    .status-denied {
-      color: #e53935;
+  
+    /* Flexbox Layout for Rows */
+    .top-row, .bottom-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
     }
-
-    .status-allowed {
-      color: #43a047;
+  
+    .center-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
-
-    .status-fallen {
-      color: #f57c00;
+  
+    /* Mobile and Small Screen Adjustments */
+    @media (max-width: 480px) {
+      .container {
+        padding: 15px;
+      }
+  
+      h2 {
+        font-size: 1.5rem;
+      }
+  
+      .label {
+        font-size: 0.9em;
+      }
+  
+      .value {
+        font-size: 1.1em;
+      }
+  
+      .icon {
+        width: 32px;
+        height: 32px;
+        margin-right: 10px;
+      }
     }
   </style>
+  
 </head>
 <body>
+  <div class="container">
+    <h2>📡 Firebase Realtime Monitor</h2>
 
-  <div class="card">
-    <h2>Patient Data</h2>
-    <div class="info"><span class="label">Access:</span> <span id="access" class="value"></span></div>
-    <div class="info"><span class="label">BPM:</span> <span id="bpm" class="value"></span></div>
-    <div class="info"><span class="label">Object Detected:</span> <span id="object" class="value"></span></div>
-    <div class="info"><span class="label">Patient Status:</span> <span id="status" class="value"></span></div>
+    <!-- Top Row with Access and Location -->
+    <div class="top-row">
+      <div class="data-group">
+        <div class="icon"><img src="https://cdn-icons-png.flaticon.com/512/1828/1828490.png" alt="Access Icon" /></div>
+        <div class="info">
+          <div class="label">Access</div>
+          <div class="value" id="access">Loading...</div>
+        </div>
+      </div>
+
+      <div class="data-group">
+        <div class="icon"><img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" alt="Location Icon" /></div>
+        <div class="info">
+          <div class="label">Location</div>
+          <div class="value" id="location">Loading...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Centered Heart Rate (BPM) -->
+    <div class="center-row">
+      <div class="data-group">
+        <div class="icon"><img src="https://cdn-icons-png.flaticon.com/512/833/833472.png" alt="Heart Rate Icon" /></div>
+        <div class="info">
+          <div class="label">Heart Rate</div>
+          <div class="value" id="bpm">Loading...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Row with Distance and Object -->
+    <div class="bottom-row">
+      <div class="data-group">
+        <div class="icon"><img src="https://cdn-icons-png.flaticon.com/512/1034/1034106.png" alt="Distance Icon" /></div>
+        <div class="info">
+          <div class="label">Distance</div>
+          <div class="value" id="distance">Loading...</div>
+        </div>
+      </div>
+
+      <div class="data-group">
+        <div class="icon"><img src="https://cdn-icons-png.flaticon.com/512/992/992700.png" alt="Object Icon" /></div>
+        <div class="info">
+          <div class="label">Object</div>
+          <div class="value" id="tilt">Loading...</div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- Firebase v8 SDKs -->
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
+  <!-- Firebase Config and Script -->
   <script>
-    // Replace with your own Firebase config
     const firebaseConfig = {
-    apiKey: "AIzaSyDdJppwEryd5pQ_WBH_V9rWkTWPWRfybuQ",
-    authDomain: "iot1-71b2a.firebaseapp.com",
-    databaseURL: "https://iot1-71b2a-default-rtdb.firebaseio.com",
-    projectId: "iot1-71b2a",
-    storageBucket: "iot1-71b2a.firebasestorage.app",
-    messagingSenderId: "957771510436",
-    appId: "1:957771510436:web:79b569686dc7061ee36c31"
+      apiKey: "AIzaSyDdJppwEryd5pQ_WBH_V9rWkTWPWRfybuQ",
+      authDomain: "iot1-71b2a.firebaseapp.com",
+      databaseURL: "https://iot1-71b2a-default-rtdb.firebaseio.com",
+      projectId: "iot1-71b2a",
+      storageBucket: "iot1-71b2a.firebasestorage.app",
+      messagingSenderId: "957771510436",
+      appId: "1:957771510436:web:79b569686dc7061ee36c31"
     };
 
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-    var database = firebase.database();
+    const database = firebase.database();
 
-    // Listen for changes at "data" node
-    var dbRef = database.ref("data");
-    dbRef.on('value', function(snapshot) {
+    const dataRef = database.ref("data");
+    const feedbackRef = database.ref("feedback");
+
+    dataRef.on("value", (snapshot) => {
       const data = snapshot.val();
-      document.getElementById("access").textContent = data["Access"];
-      document.getElementById("bpm").textContent = data["BPM"];
-      document.getElementById("object").textContent = data["Object Detected"] ? "Yes" : "No";
-      document.getElementById("status").textContent = data["Patient Status"];
+      document.getElementById("access").textContent = data?.Access ?? "N/A";
+      document.getElementById("bpm").textContent = data?.BPM ?? "N/A";
+      document.getElementById("location").textContent = data?.Location ?? "N/A";
+    });
 
-      // Optional: Add conditional styles
-      const accessEl = document.getElementById("access");
-      accessEl.classList.remove("status-denied", "status-allowed");
-      if (data["Access"] === "DENIED") accessEl.classList.add("status-denied");
-      else if (data["Access"] === "ALLOWED") accessEl.classList.add("status-allowed");
-
-      const statusEl = document.getElementById("status");
-      statusEl.classList.remove("status-fallen");
-      if (data["Patient Status"] === "Fallen") statusEl.classList.add("status-fallen");
+    feedbackRef.on("value", (snapshot) => {
+      const feedback = snapshot.val();
+      document.getElementById("distance").textContent = feedback?.Distance ?? "N/A";
+      document.getElementById("tilt").textContent = feedback?.Tilt ?? "N/A";
     });
   </script>
-
 </body>
 </html>
